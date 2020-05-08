@@ -89,10 +89,10 @@ export default class UserPostScreen extends Component {
                     onValueChange={ this.onValueChange.bind(this)}
                     >
                     <Picker.Item label="Select your Country" value="" />
-                    <Picker.Item label="India" value="india" />
-                    <Picker.Item label="Japan" value="japan" />
-                    <Picker.Item label="United States of America" value="usa" />
-                    <Picker.Item label="United Kingdom" value="uk" />
+                    <Picker.Item label="India" value="India" />
+                    <Picker.Item label="Japan" value="Japan" />
+                    <Picker.Item label="United States of America" value="USA" />
+                    <Picker.Item label="United Kingdom" value="UK" />
                 </Picker>
                 </Item>
                 <Item style={ styles.FormContent }>
@@ -116,7 +116,7 @@ export default class UserPostScreen extends Component {
                   {/* <Icon name="reply-all" size={50} /> */}
                   <Input 
                     placeholder='Area Zip Code'
-                    keyboardType='default'
+                    keyboardType='number-pad'
                     value={this.state.myZipCode}
                     onChangeText={ (myZipCode) => this.setState({ zip: myZipCode }) }
                   />
@@ -125,7 +125,7 @@ export default class UserPostScreen extends Component {
                   {/* <Icon name="reply-all" size={50} /> */}
                   <Input 
                     placeholder='Phone Number'
-                    keyboardType='number'
+                    keyboardType='number-pad'
                     value={this.state.mobile}
                     onChangeText={ (mobile) => this.setState({ mobile: mobile }) }
                   />

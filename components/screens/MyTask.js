@@ -4,6 +4,7 @@ import { Container, Card, Button } from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import CustomIcon from 'react-native-vector-icons/Feather';
+import GoogleIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ScreenHeader from './headers/PostScreenHeader';
 
 export default class MyTask extends Component {
@@ -59,7 +60,7 @@ export default class MyTask extends Component {
   getCollection = (querySnapshot) => {
     const userArr = [];
     querySnapshot.forEach((res) => {
-      const { userid, need, why, city, country, zipCode, totalParticipent, assignTo } = res.data();
+      const { userid, need, why, city, country, zipCode, totalParticipent, assignTo, mobile} = res.data();
       if(assignTo !== null){
         userArr.push({
           postid: res.id,
@@ -70,7 +71,8 @@ export default class MyTask extends Component {
           country,
           city,
           totalParticipent,
-          assignTo
+          assignTo,
+          mobile,
         });
       }
     });
@@ -84,6 +86,8 @@ export default class MyTask extends Component {
     return (
         <Container>
             <ScreenHeader nav={this.props.nav} iconName='arrow-left' headerName='Assigned To Me' />
+            {this.state.userArr.length !== 0 ?
+            <>
             <View style={styles.MainBody}>
             <FlatList 
                 data={this.state.userArr}
@@ -95,11 +99,11 @@ export default class MyTask extends Component {
                                 <View style={{ width: '80%' }}>
                                     <Text><Text>Task </Text> : {myTaskData.need}</Text>
                                     <Text><Text>E-mail : </Text>rupamchakraborty999@gmail.com</Text>
-                                    <Text><Text>Phone Number : </Text>{myTaskData.phone ? myTaskData.phone : <Text>Not Available</Text>}</Text>
+                                    <Text><Text>Phone Number : </Text>{myTaskData.mobile ? myTaskData.mobile : <Text>1234567890</Text>}</Text>
                                     <Text><Text>Location : </Text>{myTaskData.city} - {myTaskData.zipCode}</Text>
                                 </View>
                                 <View style={[styles.RightBtn, { width: '20%' }]}>
-                                    <Button style={styles.btn} onPress={ () => this.MakeCall(myTaskData.phone) }>
+                                    <Button style={styles.btn} onPress={ () => this.MakeCall(1234567890) }>
                                         <Text style={{ textAlign: 'center', marginLeft: '25%' }}>
                                             <CustomIcon name='phone' size={25} color='#fff' />
                                         </Text>
@@ -112,6 +116,13 @@ export default class MyTask extends Component {
                 keyExtractor={ (item, index) => index.toString() }
             />
             </View>
+            </>
+            :
+            <View style={styles.noInterestedPeople}>
+              <GoogleIcon name='account-multiple-outline' size={30} color='#28D8A1' />
+              <Text>Sorry! You don't have any work...</Text>
+            </View>
+            }
         </Container>
     );
   }
@@ -147,5 +158,10 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         backgroundColor: '#28D8A1',
+    },
+    noInterestedPeople: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

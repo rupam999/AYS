@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import ProfileHome from './SeperateContent/ProfileHome';
 import EditProfile from './SeperateContent/EditProfile';
@@ -23,6 +23,12 @@ function EditProfileScreen({navigation}){
   );
 }
 
+function LogoutScreen({ navigation }){
+  return(
+    Alert.alert('Are You Sure Want to Logout ?')
+  )
+}
+
 class UserAccountPage extends React.Component{
   render(){
     return(
@@ -32,6 +38,7 @@ class UserAccountPage extends React.Component{
         >
         <SellerProfileStack.Screen name="ProfileHome" component={ProfileHomeScreen} />
         <SellerProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
+        <SellerProfileStack.Screen name="Logout" component={LogoutScreen} />
       </SellerProfileStack.Navigator>
     );
   }
