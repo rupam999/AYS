@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { 
-  View, Text, StyleSheet, StatusBar, Dimensions
+  View, Text, StyleSheet, StatusBar, Dimensions, ActivityIndicator
 } from 'react-native';
 import {
   Container, Form, Item, Input, Button, Picker
@@ -15,11 +15,17 @@ export default class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        name: undefined,
-        // country: undefined,
-        email: undefined,
-        number: undefined,
-        password :undefined,
+        name: null,
+        // country: null,
+        email: null,
+        conPass: null,
+        password :null,
+        passwordCheckError: false,
+        showLoading: false,
+        emailPresent: false,
+        invalidEmail: false,
+        emptyField: false,
+        weakPassword: false,
     };
   }
 
@@ -30,29 +36,50 @@ export default class CreateAccount extends Component {
   // }
 
   signUpFunction(data, nav){
-    auth()
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then( userCredentials => {
-        return userCredentials.user.updateProfile({
-          displayName: data.name,
-          phoneNumber: data.number //Not working
-        })
-      })
-      .then(() => nav.navigate('UserDataChecking'))
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          alert('That email address is already in use!');
-        }
-    
-        else if (error.code === 'auth/invalid-email') {
-          alert('That email address is invalid!');
-        }
-        else
-          alert(error);
-      });
+    if(data.email && data.password){
+      this.setState({ emptyField: false });
+      if(data.password === data.conPass){
+        this.setState({ showLoading: true });
+        auth()
+          .createUserWithEmailAndPassword(data.email, data.password)
+          .then( userCredentials => {
+            return userCredentials.user.updateProfile({
+              displayName: data.name,
+              // phoneNumber: data.number //Not working
+            })
+          })
+          .then(() => nav.navigate('UserDataChecking'))
+          .catch(error => {
+            if (error.code === 'auth/email-already-in-use') {
+              // alert('That email address is already in use!');
+              this.setState({ emailPresent: true });
+            } else if (error.code === 'auth/invalid-email') {
+              // alert('That email address is invalid!');
+              this.setState({ invalidEmail: true });
+            } else if (error.code === 'auth/weak-password') {
+              // alert('weak password');
+              this.setState({ weakPassword: true });
+            } else
+              alert(error);
+          });
+      } else {
+        this.setState({ passwordCheckError: true });
+      }
+    } else{ 
+      this.setState({ emptyField: true });
+    }
   }
 
   render() {
+    if(this.state.showLoading){
+      return(
+        <View style={styles.loadScreen}>
+          <ActivityIndicator size={40} color='28D8A1' />
+          <Text>Taking you to a secure connection...</Text>
+        </View>
+      );
+    }
+
     return (
       <>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -60,6 +87,11 @@ export default class CreateAccount extends Component {
           <Container style={ styles.MainContainer }>
             <Text style={ styles.MainHeading }>FACI<Text style={ styles.ColorHeading }>O</Text></Text>
             <Text>For Volunteer</Text>
+            {this.state.passwordCheckError ? <Text style={styles.ErrorText}>Password and Confirm Password does not match</Text> : null}
+            {this.state.invalidEmail ? <Text style={styles.ErrorText}>Invalid E-mail Id</Text> : null}
+            {this.state.emailPresent ? <Text style={styles.ErrorText}>A account exists with this E-mail id</Text> : null}
+            {this.state.emptyField ? <Text style={styles.ErrorText}>Please fill all the fields</Text> : null}
+            {this.state.weakPassword ? <Text style={styles.ErrorText}>Password should be atleast 6 Characters</Text> : null}
             <Text></Text>
             <View style={ styles.FormArea }>
             <>
@@ -96,20 +128,20 @@ export default class CreateAccount extends Component {
                     onChangeText={ (emailid) => {this.setState({ email: emailid });} }
                   />
                 </Item>
-                <Item style={ styles.FormContent }>
-                  {/* <Icon name="reply-all" size={50} /> */}
-                  <Input 
-                    placeholder='Phone Number'
-                    keyboardType='number-pad'
-                    onChangeText={ (phone) => {this.setState({ number: phone });} }
-                  />
-                </Item>
-                <Item>
+                <Item  style={ styles.FormContent }>
                   {/* <Icon name='menu' /> */}
                   <Input 
                     placeholder='Your Password' 
                     secureTextEntry={true}
                     onChangeText={ (pass) => {this.setState({ password: pass });} }
+                  />
+                </Item>
+                <Item>
+                  {/* <Icon name="reply-all" size={50} /> */}
+                  <Input 
+                    placeholder='Confirm Password'
+                    secureTextEntry={true}
+                    onChangeText={ (confirmPass) => {this.setState({ conPass: confirmPass });} }
                     returnKeyType='done'
                   />
                 </Item>
@@ -127,6 +159,12 @@ export default class CreateAccount extends Component {
 }
 
 const styles = StyleSheet.create({
+  loadScreen: {
+    flex: 1,
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   FullBody: {
     width: width,
     height: height,
@@ -147,6 +185,11 @@ const styles = StyleSheet.create({
   ColorHeading: {
     fontSize: 44,
     color: '#28D8A1'
+  },
+  ErrorText: {
+    color: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   FormArea: {
     width: width,

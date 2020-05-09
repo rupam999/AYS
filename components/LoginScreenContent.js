@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { 
-    View, Text, StyleSheet, StatusBar, Dimensions
+    View, Text, StyleSheet, StatusBar, Dimensions, ActivityIndicator
 } from 'react-native';
 import {
     Container, Form, Item, Input, Button
@@ -16,11 +16,13 @@ export default class LoginScreenContent extends Component {
     super(props);
     this.state = {
       email: undefined,
-      password: undefined
+      password: undefined,
+      showLoading: false,
     };
   }
 
   loginFunction(data, nav){
+    this.setState({ showLoading: true });
     auth()
       .signInWithEmailAndPassword(data.email, data.password)
       .then(() => nav.navigate('UserDataChecking'))
@@ -28,6 +30,14 @@ export default class LoginScreenContent extends Component {
   }
 
   render() {
+    if(this.state.showLoading){
+      return(
+        <View style={styles.loadScreen}>
+          <ActivityIndicator size={40} color='28D8A1' />
+          <Text>Taking you to a secure connection...</Text>
+        </View>
+      );
+    }
     return (
       <>
         <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -68,6 +78,12 @@ export default class LoginScreenContent extends Component {
 }
 
 const styles = StyleSheet.create({
+  loadScreen: {
+    flex: 1,
+    width,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   FullBody: {
     width: width,
     height: height,
