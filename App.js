@@ -60,6 +60,14 @@ function UserDataCheckingScreen({ navigation }){
 
 // After Login 
 
+function UserDetailsEditScreen({navigation}){
+  return(
+    <Container>
+      <Text>This is to edit your details page</Text>
+    </Container>
+  );
+}
+
 function MyTaskScreen({navigation}){
   return(
     <Container>
@@ -213,6 +221,7 @@ function MyStack() {
       <Stack.Screen name="PostDetailsPage" component={PostDetailsPageScreen} />
       <Stack.Screen name="ApprovedPage" component={ApprovedPageScreen} />
       <Stack.Screen name="MyTask" component={MyTaskScreen} />
+      <Stack.Screen name="UserDetailsEdit" component={UserDetailsEditScreen} />
     </Stack.Navigator>
   );
 }

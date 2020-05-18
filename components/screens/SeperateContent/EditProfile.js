@@ -74,7 +74,9 @@ export default class EditProfile extends Component {
                             </Button>
                         </Left>
                         <Body>
-                            <Text>Edit Profile</Text>
+                            <TouchableWithoutFeedback onPress={ () => Nav.navigate('UserDetailsEdit') }>
+                                <Text>Edit Profile</Text>
+                            </TouchableWithoutFeedback>
                         </Body>
                         <Right>
                             <Icon active name="arrow-forward" />
