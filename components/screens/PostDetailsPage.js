@@ -130,10 +130,10 @@ export default class PostDetailsPage extends Component {
           {/* :  */}
             <View style={styles.NumberOfUserInfo}>
                 <View style={styles.NumberInformation}>
-                    <Text>
+                    {/* <Text>
                         <GoogleIcon name='check-bold' size={17} color='#000' />
                         &nbsp; You have already applied for this
-                    </Text>
+                    </Text> */}
                 </View>
             </View>
           {/* } */}
